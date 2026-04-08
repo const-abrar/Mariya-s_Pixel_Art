@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Mariyas_Pixel_Art_1';
+const CACHE_NAME = 'Mariyas_Pixel_Art_2';
 const ASSETS = [
     '/',
     '/index.html',
