@@ -1,0 +1,139 @@
+:root {
+    --bg-color: #e0e5ec;
+    --text-color: #2c3e50;
+    --text-muted: #7f8c8d;
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3b1c6;
+    --primary: #4a90e2;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; overflow-x: hidden;}
+
+.text-center { text-align: center; } .text-muted { color: var(--text-muted); }
+.hidden { display: none !important; } .mt-1 { margin-top: 0.5rem; } .mt-2 { margin-top: 1.5rem; }
+.w-100 { width: 100%; } .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-wrap { flex-wrap: wrap; } .gap-10 { gap: 10px; }
+
+.neumorphic-header {
+    padding: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 5px 5px 15px var(--shadow-dark), -5px -5px 15px var(--shadow-light);
+    border-radius: 0 0 20px 20px; margin-bottom: 1.5rem;
+}
+.neumorphic-header h1 { font-size: 1.2rem; }
+
+#app-container { max-width: 800px; margin: 0 auto; padding: 0.5rem; }
+.view { display: none; animation: fadeIn 0.3s ease-in-out; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.neumorphic-card {
+    background: var(--bg-color); border-radius: 20px; padding: 1.5rem;
+    box-shadow: 7px 7px 14px var(--shadow-dark), -7px -7px 14px var(--shadow-light);
+}
+
+.neumorphic-btn {
+    background: var(--bg-color); border: none; padding: 12px 20px; border-radius: 12px;
+    color: var(--text-color); font-weight: 600; cursor: pointer;
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    text-decoration: none; border: 1px solid transparent;
+}
+.neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light); }
+.neumorphic-btn.primary { color: var(--primary); }
+.neumorphic-btn.small { padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; }
+.neumorphic-btn.active { box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light); color: var(--primary); }
+
+.neumorphic-input, .neumorphic-slider {
+    width: 100%; padding: 10px; background: var(--bg-color); border: none; border-radius: 10px;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+    outline: none; color: var(--text-color); margin-top: 0.4rem;
+}
+
+.neumorphic-slider { -webkit-appearance: none; height: 8px; padding: 0; cursor: pointer;}
+.neumorphic-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--primary); }
+
+#original-preview { max-width: 100%; max-height: 300px; border-radius: 10px; box-shadow: 3px 3px 6px var(--shadow-dark); }
+
+/* --- Zoomable Canvas Structure --- */
+.canvas-container {
+    width: 100%;height: 60vh; overflow: hidden; background: #f0f0f0; border-radius: 10px;
+    box-shadow: inset 4px 4px 8px var(--shadow-dark); position: relative; cursor: grab;
+}
+.canvas-container.grabbing { cursor: grabbing; }
+#canvas-viewport { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; pointer-events: none;}
+#art-canvas { image-rendering: pixelated; display: block;}
+
+.zoom-controls { display: flex; gap: 8px; justify-content: center; margin-bottom: 0.5rem; }
+
+/* Legend Scroll */
+.legend-scroll { max-height: 300px; overflow-y: auto; padding-right: 5px;}
+.neumorphic-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.neumorphic-table th, .neumorphic-table td { padding: 8px; text-align: left; border-bottom: 1px solid #ccc; }
+.color-swatch { display: inline-block; width: 18px; height: 18px; border-radius: 4px; vertical-align: middle; border: 1px solid #999; }
+
+.spinner { width: 40px; height: 40px; border: 4px solid var(--bg-color); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+.actions { display: flex; gap: 1rem; justify-content: flex-end; }
+.actions.vertical { flex-direction: column; gap: 0.8rem;}
+
+@media print {
+    body { background: #fff; color: #000; overflow: visible;}
+    .neumorphic-header, .actions, .toggle-group, .zoom-controls, p.small { display: none !important; }
+    .neumorphic-card { box-shadow: none; padding: 0; }
+    #view-preview { display: block !important; }
+    .canvas-container { box-shadow: none; height: auto; overflow: visible; position: static; background: none;}
+    #canvas-viewport { transform: none !important; position: static; pointer-events: auto;}
+    #art-canvas { max-width: 100%; height: auto !important; page-break-inside: avoid; border: 1px solid #000;}
+    .legend-scroll { max-height: none; overflow: visible; }
+    .neumorphic-table { page-break-inside: avoid; margin-top: 20px;}
+}
+.canvas-container {
+    touch-action: none; /* disables browser gestures */
+}
+/* Install Popup */
+.install-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.install-card {
+    background: var(--bg-color);
+    padding: 1.5rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 7px 7px 14px var(--shadow-dark),
+                -7px -7px 14px var(--shadow-light);
+    animation: popupFade 0.3s ease;
+}
+
+.install-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.install-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.install-actions {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@keyframes popupFade {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
