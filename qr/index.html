@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Responsive QR Studio - Neumorphic</title>
+  <title>BROKEN CORNER | QR Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-    /* --- 1. NEUMORPHIC DESIGN SYSTEM --- */
+    /* --- 1. BROKEN CORNER DESIGN SYSTEM --- */
     :root {
-      /* Neumorphism Palette: Soft Gray, White & Black */
-      --bg-color: #e0e5ec;
-      --text-main: #2d3748;
-      --text-muted: #718096;
+      /* Palette: Premium Soft Ash & Deep Slate */
+      --bg-color: #e2e8f0;
+      --text-brand: #0f172a;
+      --text-main: #334155;
+      --text-muted: #64748b;
       
-      /* Shadows for 3D effect */
-      --shadow-dark: #a3b1c6;
+      /* Refined Neumorphic Shadows for compact UI */
+      --shadow-dark: #cbd5e1;
       --shadow-light: #ffffff;
       
-      --transition: 0.2s ease-in-out;
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* --- 2. BASE LAYOUT --- */
     body {
       min-height: 100vh;
       display: flex;
@@ -37,128 +37,136 @@
       padding: 16px; 
     }
 
-    /* --- 3. NEUMORPHIC CARD --- */
+    /* --- 2. THE "BROKEN CORNER" CARD --- */
     .app-container {
       width: 100%;
-      max-width: 440px;
+      max-width: 380px; /* More compact width */
       background: var(--bg-color);
-      border-radius: 24px;
-      padding: 32px;
-      /* Outset shadow for the main card */
-      box-shadow: 12px 12px 24px var(--shadow-dark), 
-                 -12px -12px 24px var(--shadow-light);
+      /* THE BROKEN CORNER EFFECT: Top-Left is sharp, rest are rounded */
+      border-radius: 2px 28px 28px 28px; 
+      padding: 28px 24px;
+      box-shadow: 10px 10px 20px var(--shadow-dark), 
+                 -10px -10px 20px var(--shadow-light);
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 20px; /* Tighter spacing */
     }
 
-    header {
+    /* Brand Header */
+    .brand-header {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: flex-end;
       margin-bottom: 4px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(100, 116, 139, 0.15);
     }
 
-    h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-main);
-    }
-
-    /* --- 4. INPUTS & CONTROLS --- */
-    label {
+    .brand-name {
       font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--text-brand);
+      text-transform: uppercase;
+    }
+
+    .tool-name {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* --- 3. COMPACT INPUTS --- */
+    label {
+      font-size: 0.7rem;
       color: var(--text-muted);
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: block;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
     }
 
     textarea {
       width: 100%;
-      padding: 16px;
-      background: var(--bg-color);
-      border: none;
-      border-radius: 16px;
-      color: var(--text-main);
-      font-size: 1rem;
-      resize: vertical;
-      min-height: 110px;
-      transition: var(--transition);
-      /* Inset shadow for pressed-in look */
-      box-shadow: inset 6px 6px 12px var(--shadow-dark), 
-                  inset -6px -6px 12px var(--shadow-light);
-    }
-
-    textarea:focus {
-      outline: none;
-      /* Slightly deeper shadow on focus */
-      box-shadow: inset 8px 8px 16px var(--shadow-dark), 
-                  inset -8px -8px 16px var(--shadow-light);
-    }
-
-    textarea::placeholder {
-      color: #a0aec0;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-    }
-
-    input[type="color"], select {
-      width: 100%;
-      height: 48px; 
+      padding: 12px 14px;
       background: var(--bg-color);
       border: none;
       border-radius: 12px;
       color: var(--text-main);
-      cursor: pointer;
-      outline: none;
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 80px; /* Shorter textarea */
       transition: var(--transition);
       box-shadow: inset 4px 4px 8px var(--shadow-dark), 
                   inset -4px -4px 8px var(--shadow-light);
     }
 
+    textarea:focus {
+      outline: none;
+      box-shadow: inset 6px 6px 12px var(--shadow-dark), 
+                  inset -6px -6px 12px var(--shadow-light);
+    }
+
+    textarea::placeholder { color: #94a3b8; font-size: 0.8rem; }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px; /* Tighter gap */
+    }
+
+    input[type="color"], select {
+      width: 100%;
+      height: 38px; /* Compact height */
+      background: var(--bg-color);
+      border: none;
+      border-radius: 10px;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition);
+      box-shadow: inset 3px 3px 6px var(--shadow-dark), 
+                  inset -3px -3px 6px var(--shadow-light);
+    }
+
     input[type="color"] {
       -webkit-appearance: none;
-      padding: 4px;
+      padding: 3px;
     }
     input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
     input[type="color"]::-webkit-color-swatch { 
       border: none; 
-      border-radius: 8px; 
+      border-radius: 6px; 
     }
 
     select {
-      padding: 0 12px;
-      font-size: 0.9rem;
+      padding: 0 8px;
+      font-size: 0.75rem;
       font-weight: 600;
     }
 
-    /* --- 5. QR DISPLAY --- */
+    /* --- 4. QR DISPLAY --- */
     .qr-wrapper {
       width: 100%;
       aspect-ratio: 1;
       background: var(--bg-color);
-      border-radius: 20px;
+      border-radius: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
       transition: var(--transition);
       overflow: hidden;
-      box-shadow: inset 6px 6px 12px var(--shadow-dark), 
-                  inset -6px -6px 12px var(--shadow-light);
+      box-shadow: inset 5px 5px 10px var(--shadow-dark), 
+                  inset -5px -5px 10px var(--shadow-light);
     }
 
     .qr-wrapper.has-image {
-      padding: 16px;
-      /* Switch to outset when QR is loaded to make it pop */
-      box-shadow: 6px 6px 12px var(--shadow-dark), 
-                 -6px -6px 12px var(--shadow-light);
+      padding: 12px; /* Smaller padding */
+      box-shadow: 5px 5px 10px var(--shadow-dark), 
+                 -5px -5px 10px var(--shadow-light);
     }
 
     #qrImg {
@@ -168,130 +176,103 @@
       opacity: 0;
       transform: scale(0.95);
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border-radius: 8px;
+      border-radius: 6px;
     }
 
-    #qrImg.loaded {
-      opacity: 1;
-      transform: scale(1);
-    }
+    #qrImg.loaded { opacity: 1; transform: scale(1); }
 
     .placeholder-icon {
       position: absolute;
-      color: var(--text-muted);
-      width: 56px;
-      height: 56px;
+      color: rgba(100, 116, 139, 0.5);
+      width: 40px; /* Smaller icon */
+      height: 40px;
       transition: var(--transition);
     }
 
-    /* --- 6. BUTTONS --- */
+    /* --- 5. COMPACT BUTTONS --- */
     .actions {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 16px;
-      margin-top: 8px;
+      gap: 12px;
+      margin-top: 4px;
     }
 
     .btn {
-      padding: 16px; 
-      border-radius: 16px;
+      padding: 12px; /* Slimmer buttons */
+      border-radius: 12px;
       border: none;
       background: var(--bg-color);
-      color: var(--text-main);
-      font-size: 1rem;
+      color: var(--text-brand);
+      font-size: 0.85rem; /* Smaller font */
       font-weight: 700;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       transition: var(--transition);
-      box-shadow: 6px 6px 12px var(--shadow-dark), 
-                 -6px -6px 12px var(--shadow-light);
+      box-shadow: 5px 5px 10px var(--shadow-dark), 
+                 -5px -5px 10px var(--shadow-light);
     }
 
     .btn:active:not(:disabled) { 
-      /* Pushed-in effect on click */
-      box-shadow: inset 4px 4px 8px var(--shadow-dark), 
-                  inset -4px -4px 8px var(--shadow-light);
-      color: var(--text-main);
+      box-shadow: inset 3px 3px 6px var(--shadow-dark), 
+                  inset -3px -3px 6px var(--shadow-light);
     }
     
-    .btn:disabled { 
-      opacity: 0.5; 
-      cursor: not-allowed; 
-    }
-
-    /* Primary button gets a slightly darker text to stand out */
-    .btn-primary {
-      color: #000;
-    }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* Loader */
     .loader {
       display: none;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(0, 0, 0, 0.1);
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.1);
       border-radius: 50%;
-      border-top-color: var(--text-main);
+      border-top-color: var(--text-brand);
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* --- 7. MOBILE RESPONSIVENESS --- */
+    /* --- 6. MOBILE RESPONSIVENESS --- */
     @media (max-width: 480px) {
       .app-container {
         padding: 24px 20px;
-        border-radius: 20px;
-        gap: 20px;
+        border-radius: 2px 24px 24px 24px;
       }
-      
-      .settings-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      
-      .setting-item:last-child {
-        grid-column: span 2;
-      }
-      
-      h2 { font-size: 1.35rem; }
+      .settings-grid { grid-template-columns: 1fr 1fr; }
+      .setting-item:last-child { grid-column: span 2; }
     }
   </style>
 </head>
 <body>
 
 <div class="app-container">
-  <header>
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-      <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-      <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-      <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-    </svg>
-    <h2>QR Studio Pro</h2>
-  </header>
+  <div class="brand-header">
+    <div class="brand-name">Broken Corner</div>
+    <div class="tool-name">QR STUDIO</div>
+  </div>
 
   <div>
-    <textarea id="text" placeholder="Drop a URL, message, or crypto address here..."></textarea>
+    <textarea id="text" placeholder="Enter URL, text, or crypto address..."></textarea>
   </div>
 
   <div class="settings-grid">
     <div class="setting-item">
-      <label>Data Color</label>
-      <input type="color" id="fgColor" value="#000000">
+      <label>Data</label>
+      <input type="color" id="fgColor" value="#0f172a">
     </div>
     <div class="setting-item">
-      <label>Base Color</label>
+      <label>Base</label>
       <input type="color" id="bgColor" value="#ffffff">
     </div>
     <div class="setting-item">
-      <label>Error Correction</label>
+      <label>Quality</label>
       <select id="eccLevel">
-        <option value="L">Low (7%)</option>
-        <option value="M" selected>Medium (15%)</option>
-        <option value="Q">Quartile (25%)</option>
-        <option value="H">High (30%)</option>
+        <option value="L">Low</option>
+        <option value="M" selected>Med</option>
+        <option value="Q">High</option>
+        <option value="H">Max</option>
       </select>
     </div>
   </div>
@@ -305,20 +286,19 @@
 
   <div class="actions">
     <button class="btn btn-primary" id="generateBtn" onclick="generateQR()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Generate Code
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Generate
       <div class="loader" id="generateLoader"></div>
     </button>
     
     <button class="btn btn-secondary" id="downloadBtn" onclick="downloadQR()" disabled>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Save 4K Master
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Save 4K
     </button>
   </div>
 </div>
 
 <script>
-  // Engine remains exactly the same as requested!
   const qrImg = document.getElementById("qrImg");
   const qrContainer = document.getElementById("qrContainer");
   const downloadBtn = document.getElementById("downloadBtn");
@@ -331,8 +311,7 @@
     
     if(!text) {
       const textarea = document.getElementById("text");
-      // Soft red shadow for error state in neumorphism
-      textarea.style.boxShadow = "inset 6px 6px 12px #ffb3b3, inset -6px -6px 12px #ffffff";
+      textarea.style.boxShadow = "inset 4px 4px 8px #ffb3b3, inset -4px -4px 8px #ffffff";
       setTimeout(() => textarea.style.boxShadow = "", 800);
       return;
     }
@@ -341,7 +320,6 @@
     const bg = document.getElementById("bgColor").value.replace('#', '');
     const ecc = document.getElementById("eccLevel").value;
     
-    // Set Loading State
     generateBtn.firstElementChild.style.display = "none"; 
     loader.style.display = "block";
     qrImg.classList.remove("loaded");
@@ -386,7 +364,7 @@
         ctx.drawImage(qrImg, 0, 0, 3840, 3840);
         
         const link = document.createElement("a");
-        link.download = "QR_Master_4K.jpeg";
+        link.download = "BrokenCorner_QR_4K.jpeg";
         link.href = canvas.toDataURL("image/jpeg", 1.0);
         link.click();
       } catch (e) {
