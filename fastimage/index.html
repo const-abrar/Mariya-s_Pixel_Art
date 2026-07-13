@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BROKEN CORNER | FastImage</title>
+    <title>BROKEN CORNER | Image Optimizer</title>
     <style>
         /* --- 1. BROKEN CORNER DESIGN SYSTEM --- */
         :root {
@@ -12,35 +12,33 @@
             --text-brand: #0f172a;
             --text-main: #334155;
             --text-muted: #64748b;
+            --success: #16a34a; /* Green for saved space */
+            --warning: #ea580c; /* Orange if size increases */
             
-            /* Status Colors adapted for Neumorphism */
-            --success: #059669; 
-            --warning: #d97706;
-
             /* Refined Neumorphic Shadows for compact UI */
             --shadow-dark: #cbd5e1;
             --shadow-light: #ffffff;
             
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
-            font-family: var(--font-stack);
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 16px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px; 
+            line-height: 1.5;
         }
 
         /* --- 2. THE "BROKEN CORNER" CARD --- */
@@ -48,7 +46,7 @@
             width: 100%;
             max-width: 380px; /* Compact width */
             background: var(--bg-color);
-            /* THE BROKEN CORNER EFFECT: Top-Left is sharp */
+            /* THE BROKEN CORNER EFFECT: Top-Left is sharp, rest are rounded */
             border-radius: 2px 28px 28px 28px; 
             padding: 28px 24px;
             box-shadow: 10px 10px 20px var(--shadow-dark), 
@@ -90,40 +88,31 @@
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
-            /* Inset shadow for a recessed drop area */
+            /* Inset shadow for drag area */
             box-shadow: inset 5px 5px 10px var(--shadow-dark), 
                         inset -5px -5px 10px var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .drop-zone.dragover {
+        .drop-zone:hover, .drop-zone.dragover {
             box-shadow: inset 8px 8px 16px var(--shadow-dark), 
                         inset -8px -8px 16px var(--shadow-light);
         }
 
-        .drop-zone p { 
-            color: var(--text-muted); 
-            font-size: 0.75rem; 
-            font-weight: 600; 
-            margin-top: 12px; 
-            pointer-events: none; 
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .drop-zone .icon { 
-            font-size: 28px; 
-            pointer-events: none; 
-            color: var(--text-muted);
-        }
-        
+        .drop-zone p { color: var(--text-muted); font-size: 0.8rem; font-weight: 500; pointer-events: none; }
+        .drop-zone svg { width: 32px; height: 32px; color: var(--text-muted); pointer-events: none; }
         #fileInput { display: none; }
 
-        /* --- 4. EDITOR LAYOUT --- */
+        /* --- 4. EDITOR UI --- */
         .editor-container {
             display: none;
             flex-direction: column;
             gap: 20px;
-            animation: fadeIn 0.4s ease forwards;
+            animation: fadeIn 0.3s ease forwards;
         }
 
         @keyframes fadeIn {
@@ -131,28 +120,26 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Preview Area */
         .preview-box {
             width: 100%;
             height: 180px; /* Compact height */
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 12px;
             box-shadow: inset 5px 5px 10px var(--shadow-dark), 
                         inset -5px -5px 10px var(--shadow-light);
+            padding: 8px;
         }
 
         .preview-box img { 
             width: 100%; 
             height: 100%; 
             object-fit: contain; 
-            border-radius: 8px;
+            border-radius: 6px;
         }
         
-        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -160,3 +147,290 @@
         }
 
         .stat-card {
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), 
+                        inset -3px -3px 6px var(--shadow-light);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .stat-value { font-size: 0.95rem; font-weight: 800; color: var(--text-brand); }
+        .stat-saved { font-size: 0.7rem; font-weight: 700; margin-top: 4px; }
+
+        /* --- 5. CONTROLS --- */
+        .controls { display: flex; flex-direction: column; gap: 16px; }
+        
+        .control-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;}
+        .control-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .control-value { font-size: 0.75rem; font-weight: 800; color: var(--text-brand); }
+
+        /* Neumorphic Format Toggles */
+        .format-selector {
+            display: flex; 
+            gap: 12px;
+        }
+        
+        .format-btn {
+            flex: 1; padding: 10px;
+            background: var(--bg-color); border: none;
+            color: var(--text-muted); font-size: 0.75rem; font-weight: 700;
+            border-radius: 10px; cursor: pointer; transition: var(--transition);
+            box-shadow: 4px 4px 8px var(--shadow-dark), 
+                       -4px -4px 8px var(--shadow-light);
+        }
+        
+        .format-btn.active { 
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), 
+                        inset -3px -3px 6px var(--shadow-light);
+            color: var(--text-brand); 
+        }
+
+        /* Neumorphic Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            padding: 10px 0;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px; width: 20px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            cursor: pointer;
+            margin-top: -7px;
+            box-shadow: 2px 2px 5px var(--shadow-dark), 
+                       -2px -2px 5px var(--shadow-light);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 6px;
+            cursor: pointer;
+            background: var(--bg-color);
+            border-radius: 10px;
+            box-shadow: inset 2px 2px 4px var(--shadow-dark), 
+                        inset -2px -2px 4px var(--shadow-light);
+        }
+        input[type=range]:focus { outline: none; }
+
+        /* --- 6. BUTTONS --- */
+        .action-buttons { display: flex; gap: 12px; margin-top: 4px; }
+        
+        button.btn-action {
+            border: none; border-radius: 12px; padding: 12px;
+            font-size: 0.8rem; font-weight: 700; cursor: pointer;
+            transition: var(--transition); font-family: inherit;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            background: var(--bg-color);
+            box-shadow: 5px 5px 10px var(--shadow-dark), 
+                       -5px -5px 10px var(--shadow-light);
+        }
+        
+        button.btn-action:active { 
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), 
+                        inset -3px -3px 6px var(--shadow-light);
+        }
+        
+        .btn-primary { color: var(--text-brand); flex: 2; }
+        .btn-secondary { color: var(--text-muted); flex: 1; }
+
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 24px 20px;
+                border-radius: 2px 24px 24px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="brand-header">
+        <div class="brand-name">Broken Corner</div>
+        <div class="tool-name">OPTIMIZER</div>
+    </div>
+
+    <div class="drop-zone" id="dropZone">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <p>Tap to select image<br>or drag & drop here</p>
+        <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp">
+    </div>
+
+    <div class="editor-container" id="editorContainer">
+        <div class="preview-box">
+            <img id="imagePreview" src="" alt="Preview">
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Original</div>
+                <div class="stat-value" id="originalSize">0 KB</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Optimized</div>
+                <div class="stat-value" id="compressedSize">0 KB</div>
+                <div class="stat-saved" id="savingsText">0%</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="format-selector">
+                <button class="format-btn active" data-format="image/jpeg">JPEG</button>
+                <button class="format-btn" data-format="image/webp">WEBP</button>
+            </div>
+
+            <div>
+                <div class="control-header">
+                    <span class="control-label">Quality Level</span>
+                    <span class="control-value" id="qualityValue">80%</span>
+                </div>
+                <input type="range" id="qualitySlider" min="1" max="100" value="80">
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-action btn-secondary" id="cancelBtn">Clear</button>
+            <button class="btn-action btn-primary" id="downloadBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Engine remains identical
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const editorContainer = document.getElementById('editorContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const originalSizeEl = document.getElementById('originalSize');
+    const compressedSizeEl = document.getElementById('compressedSize');
+    const savingsText = document.getElementById('savingsText');
+    const qualitySlider = document.getElementById('qualitySlider');
+    const qualityValue = document.getElementById('qualityValue');
+    const formatBtns = document.querySelectorAll('.format-btn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    let originalFile = null;
+    let originalImageObj = new Image();
+    let currentBlob = null;
+    let currentFormat = 'image/jpeg';
+    let timeoutId = null;
+
+    // File Selection
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault(); dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files[0] && e.dataTransfer.files[0].type.startsWith('image/')) {
+            loadFile(e.dataTransfer.files[0]);
+        }
+    });
+    fileInput.addEventListener('change', e => {
+        if (e.target.files[0]) loadFile(e.target.files[0]);
+    });
+
+    function loadFile(file) {
+        originalFile = file;
+        originalSizeEl.textContent = formatBytes(file.size);
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            originalImageObj.src = e.target.result;
+            originalImageObj.onload = () => {
+                dropZone.style.display = 'none';
+                editorContainer.style.display = 'flex';
+                compressImage(); // Initial compression
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Controls Logic
+    qualitySlider.addEventListener('input', (e) => {
+        qualityValue.textContent = `${e.target.value}%`;
+        // Debounce compression to keep UI smooth
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(compressImage, 150);
+    });
+
+    formatBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            formatBtns.forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFormat = e.target.dataset.format;
+            compressImage();
+        });
+    });
+
+    // Core Compression Engine using Canvas
+    function compressImage() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = originalImageObj.width;
+        canvas.height = originalImageObj.height;
+        
+        ctx.drawImage(originalImageObj, 0, 0, canvas.width, canvas.height);
+        
+        const quality = qualitySlider.value / 100;
+        
+        canvas.toBlob((blob) => {
+            if (!blob) return;
+            currentBlob = blob;
+            
+            // Update UI
+            compressedSizeEl.textContent = formatBytes(blob.size);
+            const savings = ((originalFile.size - blob.size) / originalFile.size * 100).toFixed(0);
+            
+            if (savings > 0) {
+                savingsText.textContent = `-${savings}%`;
+                savingsText.style.color = 'var(--success)';
+            } else {
+                savingsText.textContent = `+${Math.abs(savings)}%`;
+                savingsText.style.color = 'var(--warning)';
+            }
+
+            // Update Preview
+            if (imagePreview.src) URL.revokeObjectURL(imagePreview.src);
+            imagePreview.src = URL.createObjectURL(blob);
+
+        }, currentFormat, quality);
+    }
+
+    // Download
+    downloadBtn.addEventListener('click', () => {
+        if (!currentBlob) return;
+        const ext = currentFormat === 'image/webp' ? 'webp' : 'jpg';
+        const originalName = originalFile.name.split('.')[0];
+        const newName = `BrokenCorner_${originalName}_optimized.${ext}`;
+        
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(currentBlob);
+        a.download = newName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+
+    // Cancel/Reset
+    cancelBtn.addEventListener('click', () => {
+        originalFile = null;
+        fileInput.value = '';
+        if (imagePreview.src) URL.revokeObjectURL(imagePreview.src);
+        editorContainer.style.display = 'none';
+        dropZone.style.display = 'flex';
+    });
+
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024, sizes = ['B', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    }
+</script>
+</body>
+</html>
