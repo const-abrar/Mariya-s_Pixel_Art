@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Responsive QR Studio - Neumorphic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    /* --- 1. NEUMORPHIC DESIGN SYSTEM --- */
+    :root {
+      /* Neumorphism Palette: Soft Gray, White & Black */
+      --bg-color: #e0e5ec;
+      --text-main: #2d3748;
+      --text-muted: #718096;
+      
+      /* Shadows for 3D effect */
+      --shadow-dark: #a3b1c6;
+      --shadow-light: #ffffff;
+      
+      --transition: 0.2s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    /* --- 2. BASE LAYOUT --- */
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-color);
+      color: var(--text-main);
+      padding: 16px; 
+    }
+
+    /* --- 3. NEUMORPHIC CARD --- */
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-color);
+      border-radius: 24px;
+      padding: 32px;
+      /* Outset shadow for the main card */
+      box-shadow: 12px 12px 24px var(--shadow-dark), 
+                 -12px -12px 24px var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+    }
+
+    /* --- 4. INPUTS & CONTROLS --- */
+    label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 16px;
+      background: var(--bg-color);
+      border: none;
+      border-radius: 16px;
+      color: var(--text-main);
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 110px;
+      transition: var(--transition);
+      /* Inset shadow for pressed-in look */
+      box-shadow: inset 6px 6px 12px var(--shadow-dark), 
+                  inset -6px -6px 12px var(--shadow-light);
+    }
+
+    textarea:focus {
+      outline: none;
+      /* Slightly deeper shadow on focus */
+      box-shadow: inset 8px 8px 16px var(--shadow-dark), 
+                  inset -8px -8px 16px var(--shadow-light);
+    }
+
+    textarea::placeholder {
+      color: #a0aec0;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    input[type="color"], select {
+      width: 100%;
+      height: 48px; 
+      background: var(--bg-color);
+      border: none;
+      border-radius: 12px;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition);
+      box-shadow: inset 4px 4px 8px var(--shadow-dark), 
+                  inset -4px -4px 8px var(--shadow-light);
+    }
+
+    input[type="color"] {
+      -webkit-appearance: none;
+      padding: 4px;
+    }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { 
+      border: none; 
+      border-radius: 8px; 
+    }
+
+    select {
+      padding: 0 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* --- 5. QR DISPLAY --- */
+    .qr-wrapper {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-color);
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      transition: var(--transition);
+      overflow: hidden;
+      box-shadow: inset 6px 6px 12px var(--shadow-dark), 
+                  inset -6px -6px 12px var(--shadow-light);
+    }
+
+    .qr-wrapper.has-image {
+      padding: 16px;
+      /* Switch to outset when QR is loaded to make it pop */
+      box-shadow: 6px 6px 12px var(--shadow-dark), 
+                 -6px -6px 12px var(--shadow-light);
+    }
+
+    #qrImg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 8px;
+    }
+
+    #qrImg.loaded {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .placeholder-icon {
+      position: absolute;
+      color: var(--text-muted);
+      width: 56px;
+      height: 56px;
+      transition: var(--transition);
+    }
+
+    /* --- 6. BUTTONS --- */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      padding: 16px; 
+      border-radius: 16px;
+      border: none;
+      background: var(--bg-color);
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+      box-shadow: 6px 6px 12px var(--shadow-dark), 
+                 -6px -6px 12px var(--shadow-light);
+    }
+
+    .btn:active:not(:disabled) { 
+      /* Pushed-in effect on click */
+      box-shadow: inset 4px 4px 8px var(--shadow-dark), 
+                  inset -4px -4px 8px var(--shadow-light);
+      color: var(--text-main);
+    }
+    
+    .btn:disabled { 
+      opacity: 0.5; 
+      cursor: not-allowed; 
+    }
+
+    /* Primary button gets a slightly darker text to stand out */
+    .btn-primary {
+      color: #000;
+    }
+
+    /* Loader */
+    .loader {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--text-main);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* --- 7. MOBILE RESPONSIVENESS --- */
+    @media (max-width: 480px) {
+      .app-container {
+        padding: 24px 20px;
+        border-radius: 20px;
+        gap: 20px;
+      }
+      
+      .settings-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .setting-item:last-child {
+        grid-column: span 2;
+      }
+      
+      h2 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+      <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+      <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+      <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+    </svg>
+    <h2>QR Studio Pro</h2>
+  </header>
+
+  <div>
+    <textarea id="text" placeholder="Drop a URL, message, or crypto address here..."></textarea>
+  </div>
+
+  <div class="settings-grid">
+    <div class="setting-item">
+      <label>Data Color</label>
+      <input type="color" id="fgColor" value="#000000">
+    </div>
+    <div class="setting-item">
+      <label>Base Color</label>
+      <input type="color" id="bgColor" value="#ffffff">
+    </div>
+    <div class="setting-item">
+      <label>Error Correction</label>
+      <select id="eccLevel">
+        <option value="L">Low (7%)</option>
+        <option value="M" selected>Medium (15%)</option>
+        <option value="Q">Quartile (25%)</option>
+        <option value="H">High (30%)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="qr-wrapper" id="qrContainer">
+    <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M12 4v16m8-8H4" stroke-linecap="round"/>
+    </svg>
+    <img id="qrImg" crossorigin="anonymous" alt="Generated QR">
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="generateBtn" onclick="generateQR()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Generate Code
+      <div class="loader" id="generateLoader"></div>
+    </button>
+    
+    <button class="btn btn-secondary" id="downloadBtn" onclick="downloadQR()" disabled>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Save 4K Master
+    </button>
+  </div>
+</div>
+
+<script>
+  // Engine remains exactly the same as requested!
+  const qrImg = document.getElementById("qrImg");
+  const qrContainer = document.getElementById("qrContainer");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const generateBtn = document.getElementById("generateBtn");
+  const loader = document.getElementById("generateLoader");
+  const placeholder = document.querySelector('.placeholder-icon');
+
+  function generateQR() {
+    const text = document.getElementById("text").value.trim();
+    
+    if(!text) {
+      const textarea = document.getElementById("text");
+      // Soft red shadow for error state in neumorphism
+      textarea.style.boxShadow = "inset 6px 6px 12px #ffb3b3, inset -6px -6px 12px #ffffff";
+      setTimeout(() => textarea.style.boxShadow = "", 800);
+      return;
+    }
+
+    const fg = document.getElementById("fgColor").value.replace('#', '');
+    const bg = document.getElementById("bgColor").value.replace('#', '');
+    const ecc = document.getElementById("eccLevel").value;
+    
+    // Set Loading State
+    generateBtn.firstElementChild.style.display = "none"; 
+    loader.style.display = "block";
+    qrImg.classList.remove("loaded");
+
+    const encoded = encodeURIComponent(text);
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encoded}&color=${fg}&bgcolor=${bg}&ecc=${ecc}&margin=0`;
+
+    qrImg.onload = () => {
+      qrContainer.classList.add("has-image");
+      qrImg.classList.add("loaded");
+      placeholder.style.opacity = '0';
+      
+      generateBtn.firstElementChild.style.display = "block";
+      loader.style.display = "none";
+      downloadBtn.disabled = false;
+    };
+
+    qrImg.onerror = () => {
+      alert("Network error: Could not generate QR.");
+      generateBtn.firstElementChild.style.display = "block";
+      loader.style.display = "none";
+    };
+
+    qrImg.src = url;
+  }
+
+  function downloadQR() {
+    if(!qrImg.src || !qrImg.classList.contains("loaded")) return;
+
+    const originalText = downloadBtn.innerHTML;
+    downloadBtn.innerHTML = "Processing...";
+    downloadBtn.disabled = true;
+
+    setTimeout(() => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 3840;
+        canvas.height = 3840;
+        const ctx = canvas.getContext("2d");
+        
+        ctx.imageSmoothingEnabled = false; 
+        ctx.drawImage(qrImg, 0, 0, 3840, 3840);
+        
+        const link = document.createElement("a");
+        link.download = "QR_Master_4K.jpeg";
+        link.href = canvas.toDataURL("image/jpeg", 1.0);
+        link.click();
+      } catch (e) {
+        alert("Cross-origin security blocked the download on this browser.");
+      } finally {
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+      }
+    }, 50);
+  }
+</script>
+
+</body>
+</html>
